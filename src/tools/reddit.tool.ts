@@ -1,23 +1,27 @@
-import { z } from "zod";
-import { ToolName } from "./tool.models";
+import type { ToolFn } from '../../types'
+import { z } from 'zod'
+import fetch from 'node-fetch'
+import { ToolName } from './tool.models'
 
-export const RedditToolDefinition = {
+export const redditToolDefinition = {
   name: ToolName.REDDIT,
-  description: "Get the latest post from reddit",
   parameters: z.object({}),
+  description: 'get the latest posts from Reddit',
 }
 
-type RedditToolArgs = z.infer<typeof RedditToolDefinition.parameters>;
+type Args = z.infer<typeof redditToolDefinition.parameters>
 
-export const getRedditPost = async ({ toolArgs }: { toolArgs: RedditToolArgs }) => {
-  const { data } = await fetch("https://www.reddit.com/r/nba/.json").then(
-    (res) => res.json() as Promise<{ data: { children: any[] } }>
-  );
-
-  const infos = data.children.map((child: any) => ({
+export const reddit: ToolFn<Args, string> = async ({ toolArgs }) => {
+  const { data } = await fetch('https://www.reddit.com/r/nba/.json').then(
+    (res) => res.json()
+  )
+  const relevantInfo = data.children.map((child: any) => ({
     title: child.data.title,
-    url: child.data.url,
-  }));
+    link: child.data.url,
+    subreddit: child.data.subreddit_name_prefixed,
+    author: child.data.author,
+    upvotes: child.data.ups,
+  }))
 
-  return JSON.stringify(infos, null, 2);
+  return JSON.stringify(relevantInfo, null, 2)
 }

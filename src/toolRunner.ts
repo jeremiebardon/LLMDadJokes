@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { generateImage, generateImageToolDefinition } from "./tools/generate-image.tool";
 import { dadJokesToolDefinition, getDadJoke } from "./tools/dad-jokes.tool";
-import { getRedditPost, RedditToolDefinition } from "./tools/reddit.tool";
+import { reddit, redditToolDefinition } from "./tools/reddit.tool";
 import { getWeather, weatherToolDefinition } from "./tools/weather.tool";
 
 
@@ -21,8 +21,8 @@ export const runTool = async (
       return await generateImage(input);
     case dadJokesToolDefinition.name:
       return await getDadJoke(input);
-    case RedditToolDefinition.name:
-      return await getRedditPost(input);
+    case redditToolDefinition.name:
+      return await reddit(input);
     case weatherToolDefinition.name:
       return await getWeather(input);
 

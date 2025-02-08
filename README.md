@@ -10,8 +10,6 @@ To run the project:
 
 ```bash
 npm start
-# or
-bun run index.ts
 ```
 
 Try to ask Generate an image from a random dad joke for example
